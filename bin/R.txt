@@ -399,12 +399,8 @@ int string hello_world 0x7f0a000e
 int string name 0x7f0a0012
 int string phoneNum 0x7f0a0011
 int style ActionBar 0x7f0b008d
-int style ActionBar_MenuText 0x7f0b008e
 int style AppBaseTheme 0x7f0b008b
 int style AppTheme 0x7f0b008c
-int style MyActionBar 0x7f0b008f
-int style MyActionBar_MenuTextStyle 0x7f0b0091
-int style MyActionBar_TitleTextStyle 0x7f0b0090
 int style TextAppearance_AppCompat_Base_CompactMenu_Dialog 0x7f0b0063
 int style TextAppearance_AppCompat_Base_SearchResult 0x7f0b006d
 int style TextAppearance_AppCompat_Base_SearchResult_Subtitle 0x7f0b006f

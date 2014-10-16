@@ -65,7 +65,7 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void onItemSelected(int position, String rowId) {
+    public void onItemSelected(int position, String rawId) {
         if (mIsLog)
             Log.e(TAG, "onItemSelected");
 
@@ -73,26 +73,26 @@ public class MainActivity extends ActionBarActivity implements
         // TODO Auto-generated method stub
 
         initDetailFragment(position,
-                ContactsImplement.getContact(mContext, rowId));
+                ContactsImplement.getContact(mContext, rawId));
     }
 
     @Override
     // item 0:Edit,1:Delete
-    public void onContactDialogSelected(int item, String rowId, int position,
-            String preContactRowId) {
+    public void onContactDialogSelected(int item, String rawId, int position,
+            String preContactRawId) {
         // TODO Auto-generated method stub
 
         if (item == 1) {
             if (mIsLog)
-                Log.e(TAG, "onContactDialogSelected(Delete) id: " + rowId);
+                Log.e(TAG, "onContactDialogSelected(Delete) id: " + rawId);
 
-            ContactsImplement.deleteContact(mContext, rowId);
+            ContactsImplement.deleteContact(mContext, rawId);
             if (mIsLog)
                 Log.e(TAG, "position: " + position);
             if (mIsLargeScreen) {
-                if (null != preContactRowId) {
+                if (null != preContactRawId) {
                     initDetailFragment(-1, ContactsImplement.getContact(
-                            mContext, preContactRowId));
+                            mContext, preContactRawId));
 
                 } else
                     initDetailFragment(-1, null);
@@ -100,10 +100,10 @@ public class MainActivity extends ActionBarActivity implements
 
         } else if (item == 0) {
             if (mIsLog)
-                Log.e(TAG, "onContactDialogSelected(Edit) id: " + rowId);
+                Log.e(TAG, "onContactDialogSelected(Edit) id: " + rawId);
             Intent i = new Intent(MainActivity.this,
                     UpdateContactActivity.class);
-            i.putExtra("id", rowId);
+            i.putExtra("id", rawId);
             startActivityForResult(i, UPDATECONTACTCODE);
         }
 
@@ -143,11 +143,11 @@ public class MainActivity extends ActionBarActivity implements
     public void setDetailFragmentFromNotification(Bundle bundle) {
         if (null != bundle) {
             Log.e(TAG, "setDetailFragmentFromNotification: null != bundle");
-            String rowIdOfExistPhoneNum = bundle
+            String rawIdOfExistPhoneNum = bundle
                     .getString(RAWID_OF_EXIST_PHONE_NUM);
-            if (null != rowIdOfExistPhoneNum) {
+            if (null != rawIdOfExistPhoneNum) {
                 initDetailFragment(-1, ContactsImplement.getContact(mContext,
-                        rowIdOfExistPhoneNum));
+                        rawIdOfExistPhoneNum));
                 bundle.putString(RAWID_OF_EXIST_PHONE_NUM, null);
 
             }
@@ -215,7 +215,7 @@ public class MainActivity extends ActionBarActivity implements
                     if (mIsLog)
                         Log.e(TAG, "null != mContactsListFragment");
                     mContactsListFragment.setmIsNewContact(true);
-                    mContactsListFragment.setmSelectedRowId(cId);
+                    mContactsListFragment.setmSelectedRawId(cId);
                 }
 
                 initDetailFragment(-1,
@@ -233,7 +233,7 @@ public class MainActivity extends ActionBarActivity implements
                     if (mIsLog)
                         Log.e(TAG, "null != mContactsListFragment");
                     mContactsListFragment.setmIsNewContact(true);
-                    mContactsListFragment.setmSelectedRowId(cId);
+                    mContactsListFragment.setmSelectedRawId(cId);
                 }
                 initDetailFragment(-1,
                         ContactsImplement.getContact(mContext, cId));

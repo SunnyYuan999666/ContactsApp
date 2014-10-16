@@ -23,6 +23,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,11 +56,11 @@ public class ContactsListFragment extends Fragment implements
 
     public interface OnHeadlineSelectedListener {
         // Called by ContactsListFragment when a list item is selected
-        public void onItemSelected(int position, String rowId);
+        public void onItemSelected(int position, String rawId);
 
         // item 0:Edit,1:Delete
-        public void onContactDialogSelected(int item, String rowId,
-                int position, String preContactRowId);
+        public void onContactDialogSelected(int item, String rawId,
+                int position, String preContactRawId);
 
         public void onStartInsertContactActivity();
     }
@@ -132,9 +133,9 @@ public class ContactsListFragment extends Fragment implements
 
                         if (view.getId() == R.id.listViewContactsPhoto) {
 
-                            int imageDataRow = cursor.getInt(columnIndex);
+                            int imageDataRaw = cursor.getInt(columnIndex);
                             Bitmap image = ContactsImplement.queryContactImage(
-                                    getActivity(), imageDataRow);
+                                    getActivity(), imageDataRaw);
 
                             ImageView iv = (ImageView) view
                                     .findViewById(R.id.listViewContactsPhoto);
@@ -162,13 +163,13 @@ public class ContactsListFragment extends Fragment implements
                         .getItem(position));
                 if (mIsLog)
                     Log.e(TAG, "contactID: " + contactId);
-                String rowId = getContactRowId(contactId);
+                String rawId = getContactRawId(contactId);
 
-                mSelectedRawId = rowId;
+                mSelectedRawId = rawId;
                 if (mIsLog)
-                    Log.e(TAG, "rowId: " + rowId);
+                    Log.e(TAG, "rawId: " + rawId);
 
-                mCallback.onItemSelected(position, rowId);
+                mCallback.onItemSelected(position, rawId);
             }
         });
         mContactsListView
@@ -180,26 +181,26 @@ public class ContactsListFragment extends Fragment implements
                         int contactId = getContactId(cursor);
                         if (mIsLog)
                             Log.e(TAG, "contactID: " + contactId);
-                        String rowId = getContactRowId(contactId);
+                        String rawId = getContactRawId(contactId);
                         if (mIsLog)
-                            Log.e(TAG, "rowId: " + rowId);
+                            Log.e(TAG, "rawId: " + rawId);
 
                         String name = getContactDisplayName(cursor);
-                        String preContactRowId = null;
+                        String preContactRawId = null;
                         int prePosition = -1;
                         if (position > 0) {
                             prePosition = position - 1;
                             int preContactId = getContactId((Cursor) mSimpleCursorAdapter
                                     .getItem(prePosition));
-                            preContactRowId = getContactRowId(preContactId);
+                            preContactRawId = getContactRawId(preContactId);
                         } else if (0 == position && 0 != cursor.getCount()) {
                             prePosition = position;
                             int preContactId = getContactId((Cursor) mSimpleCursorAdapter
                                     .getItem(prePosition + 1));
-                            preContactRowId = getContactRowId(preContactId);
+                            preContactRawId = getContactRawId(preContactId);
                         }
 
-                        contactDialog(name, rowId, position, preContactRowId,
+                        contactDialog(name, rawId, position, preContactRawId,
                                 prePosition).show();
                         return true;
                     }
@@ -239,10 +240,10 @@ public class ContactsListFragment extends Fragment implements
         if (mIsLog)
             Log.v(TAG, "OnLoadFinished...");
         if (getmIsNewContact() || mIsDeleteContact) {
-            if (null != getmSelectedRowId()) {
+            if (null != getmSelectedRawId()) {
                 int pos = ContactsImplement.getPositionInList(mContext,
-                        getmSelectedRowId());
-                Log.v(TAG, "getmSelectedRowId pos:" + pos);
+                        getmSelectedRawId());
+                Log.v(TAG, "getmSelectedRawId pos:" + pos);
                 setCheckedItemBackground(pos);
             }
             mIsNewContact = false;
@@ -293,18 +294,18 @@ public class ContactsListFragment extends Fragment implements
                 .getColumnIndex(ContactsContract.Contacts._ID));
     }
 
-    public String getContactRowId(int contactId) {
+    public String getContactRawId(int contactId) {
         ContentResolver contentResolver = mContext.getContentResolver();
         Cursor rawIdCursor = contentResolver.query(RawContacts.CONTENT_URI,
                 null, RawContacts.CONTACT_ID + " = " + contactId, null, null);
-        String rowId = "";
+        String rawId = "";
 
         if (rawIdCursor.moveToFirst()) {
-            rowId = rawIdCursor.getString(rawIdCursor
+            rawId = rawIdCursor.getString(rawIdCursor
                     .getColumnIndex(RawContacts._ID));
         }
         rawIdCursor.close();
-        return rowId;
+        return rawId;
     }
 
     public String getContactDisplayName(Cursor cursor) {
@@ -312,11 +313,12 @@ public class ContactsListFragment extends Fragment implements
                 .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
     }
 
-    public Dialog contactDialog(String name, final String rowId,
-            final int position, final String preContactRowId,
+    public Dialog contactDialog(String name, final String rawId,
+            final int position, final String preContactRawId,
             final int prePosition) {
-        Dialog dialog = new Dialog(mContext);
-        Builder builder = new AlertDialog.Builder(mContext);
+        Context themeContext = new ContextThemeWrapper(mContext, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
+        Dialog dialog = new Dialog(themeContext);
+        Builder builder = new AlertDialog.Builder(themeContext);
         builder.setTitle(name);
         // if(isAdded())
 
@@ -326,12 +328,12 @@ public class ContactsListFragment extends Fragment implements
                     public void onClick(DialogInterface dialog, int item) {
 
                         if (null != mCallback) {
-                            mCallback.onContactDialogSelected(item, rowId,
-                                    position, preContactRowId);
+                            mCallback.onContactDialogSelected(item, rawId,
+                                    position, preContactRawId);
                             if (1 == item) { // delete
                                 if (mIsLog)
                                     Log.e(TAG, "prePosition: " + prePosition);
-                                setmSelectedRowId(preContactRowId);
+                                setmSelectedRawId(preContactRawId);
                                 mIsDeleteContact = true;
                             }
                         }
@@ -373,12 +375,12 @@ public class ContactsListFragment extends Fragment implements
     }
 
   
-    public String getmSelectedRowId() {
+    public String getmSelectedRawId() {
         return mSelectedRawId;
     }
 
-    public void setmSelectedRowId(String mSelectedRawId) {
-        Log.v(TAG, "mSelectedRowId: " + mSelectedRawId);
+    public void setmSelectedRawId(String mSelectedRawId) {
+        Log.v(TAG, "mSelectedRawId: " + mSelectedRawId);
         this.mSelectedRawId = mSelectedRawId;
     }
 

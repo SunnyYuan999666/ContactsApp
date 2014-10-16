@@ -1305,7 +1305,6 @@ containing a value of this type.
     }
     public static final class style {
         public static final int ActionBar=0x7f0b008d;
-        public static final int ActionBar_MenuText=0x7f0b008e;
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
@@ -1326,6 +1325,10 @@ containing a value of this type.
         res/values-v11/styles.xml on API 14+ devices.
 
 
+
+
+
+
     
          */
         public static final int AppBaseTheme=0x7f0b008b;
@@ -1333,9 +1336,6 @@ containing a value of this type.
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f0b008c;
-        public static final int MyActionBar=0x7f0b008f;
-        public static final int MyActionBar_MenuTextStyle=0x7f0b0091;
-        public static final int MyActionBar_TitleTextStyle=0x7f0b0090;
         /**  Mimic text appearance in select_dialog_item.xml 
          */
         public static final int TextAppearance_AppCompat_Base_CompactMenu_Dialog=0x7f0b0063;

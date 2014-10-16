@@ -189,12 +189,12 @@ public class InsertContactActivity extends Activity {
         int id = item.getItemId();
         if (id == R.id.actionEditdone) {
             ContactModle cml = getEditContact();
-            String newContactRowId = ContactsImplement.insertContactID(
+            String newContactRawId = ContactsImplement.insertContactID(
                     mContext, cml, mPhotoBitmap);
             Intent intent = new Intent(InsertContactActivity.this,
                     MainActivity.class);
-            intent.putExtra("cId", newContactRowId);
-            Log.e(TAG, "actionEditdone cId:" + newContactRowId);
+            intent.putExtra("cId", newContactRawId);
+            Log.e(TAG, "actionEditdone cId:" + newContactRawId);
 
             if (mIsFromNotification) {
                 Log.e(TAG, "mIsFromNotification = true");
