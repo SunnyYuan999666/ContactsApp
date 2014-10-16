@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:TestApp="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.testapp.MainActivity" >
+
+    
+    <item
+        android:id="@+id/actionAddContact"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_action_user_add"
+        android:title="@string/action_addContact"
+        TestApp:showAsAction="always"/>
+
+</menu>
