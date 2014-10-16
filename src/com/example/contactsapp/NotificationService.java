@@ -17,6 +17,7 @@ public class NotificationService extends IntentService {
     private static final String TAG = "NotificationService";
     private static final String PHONE_NUM = "phoneNum";
     private static final String RAWID_OF_EXIST_PHONE_NUM = "rawIdOfExistPhoneNum";
+    private static final String PHONE_NUM_DATA = "data";
 
     public NotificationService() {
         super("NotificationService");
@@ -40,7 +41,7 @@ public class NotificationService extends IntentService {
             // Intent.FLAG_ACTIVITY_NEW_TASK
             // |
             // Intent.FLAG_ACTIVITY_CLEAR_TASK
-            viewIntent.putExtra("data", incomingNumber);
+            viewIntent.putExtra(PHONE_NUM_DATA, incomingNumber);
             viewPendingIntent = PendingIntent.getActivity(this,
                     MainActivity.INSERTCONTACTCODE, viewIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);

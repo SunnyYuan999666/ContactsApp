@@ -32,11 +32,11 @@ public class ContactsImplement {
             ContactsContract.Contacts.HAS_PHONE_NUMBER };
     private static Boolean mIsLog = false;
 
-    public static int getPhotoId(Context c, String rowId) {
+    public static int getPhotoId(Context c, String rawId) {
         int PhotoId = 0;
-        String contactId = getContactId(c, rowId);
+        String contactId = getContactId(c, rawId);
         if (mIsLog)
-            Log.v(TAG, "rowId: " + rowId + "  contactId: " + contactId);
+            Log.v(TAG, "rawId: " + rawId + "  contactId: " + contactId);
         Cursor cursor = c.getContentResolver().query(Contacts.CONTENT_URI,
                 new String[] { Contacts.PHOTO_ID }, Contacts._ID + "=?", // Contacts._ID
                 new String[] { contactId }, null);
@@ -79,11 +79,11 @@ public class ContactsImplement {
         return baos.toByteArray();
     }
 
-    public static String getContactId(Context context, String rowId) {
+    public static String getContactId(Context context, String rawId) {
         ContentResolver contentResolver = context.getContentResolver();
         Cursor contactCursor = contentResolver.query(RawContacts.CONTENT_URI,
                 new String[] { RawContacts.CONTACT_ID }, RawContacts._ID
-                        + " = " + rowId, null, null);
+                        + " = " + rawId, null, null);
         String contactId = "";
 
         if (contactCursor.moveToFirst()) {
@@ -150,9 +150,9 @@ public class ContactsImplement {
             Uri myContactUri = res[0].uri;
             int lastSlash = myContactUri.toString().lastIndexOf("/");
             int length = myContactUri.toString().length();
-            String contactRowID = (String) myContactUri.toString().subSequence(
+            String contactRawID = (String) myContactUri.toString().subSequence(
                     lastSlash + 1, length);
-            return contactRowID;
+            return contactRawID;
             // ops.clear();
         } catch (RemoteException e) {
             // TODO Auto-generated catch block
@@ -261,12 +261,12 @@ public class ContactsImplement {
 
     }
 
-    public static void newContactPhoto(Context context, String rowId,
+    public static void newContactPhoto(Context context, String rawId,
             Bitmap photoBitmap) {
         ArrayList<ContentProviderOperation> opsNew = new ArrayList<ContentProviderOperation>();
         opsNew.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
-                .withValue(ContactsContract.Data.RAW_CONTACT_ID, rowId)
+                .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawId)
                 .withValue(
                         ContactsContract.Data.MIMETYPE,
                         ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
@@ -402,7 +402,7 @@ public class ContactsImplement {
         return rawContactsId;
     }
 
-    public static int getPositionInList(Context ctx, String rowId) {
+    public static int getPositionInList(Context ctx, String rawId) {
         int pos = 0;
         ContentResolver contentResolver = ctx.getContentResolver();
 
@@ -411,13 +411,13 @@ public class ContactsImplement {
                 ContactsContract.Contacts.DISPLAY_NAME
                         + " COLLATE LOCALIZED ASC");
         // rawCursor.moveToFirst();
-        String newRowId = "";
+        String newRawID = "";
         Log.v(TAG, "rawCursor.getCount(): " + rawCursor.getCount());
         while (rawCursor.moveToNext()) {
 
-            newRowId = rawCursor.getString(rawCursor
+            newRawID = rawCursor.getString(rawCursor
                     .getColumnIndex(RawContacts._ID));
-            if (rowId.equals(newRowId)) {
+            if (rawId.equals(newRawID)) {
                 // pos = rawCursor.getPosition();
                 rawCursor.close();
                 return pos;

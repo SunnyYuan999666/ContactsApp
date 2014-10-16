@@ -35,6 +35,7 @@ public class InsertContactActivity extends Activity {
     private static final String IS_MENU_ENABLED = "isMenuEnable";
     private static final String TAG = "InsertContactActivity";
     private static final String IS_INSERT_CONTACT_ACTIVITY = "isInsertContactActivity";
+    private static final String PHONE_NUM_DATA = "data";
     private static final int CAMERA_PIC_REQUEST = 222;
     private static final int GALLERY_REQUEST = 111;
     private static final int CROP_REQUEST = 135;
@@ -60,7 +61,7 @@ public class InsertContactActivity extends Activity {
         Bundle bundle = getIntent().getExtras();
         if (null != bundle) {
             Log.e(TAG, "null != bundle");
-            String phoneN = bundle.getString("data");
+            String phoneN = bundle.getString(PHONE_NUM_DATA);
             if (null != phoneN) {
                 Log.e(TAG, "mIsFromNotification = true");
                 mIsFromNotification = true;
